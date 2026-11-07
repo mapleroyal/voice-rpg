@@ -17,7 +17,7 @@ class MuseInstallTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix="voice-rpg-muse-")
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
+        self.root = Path(self.tmp.name).resolve()
         self.project = self.root / "checkout with 'quotes' and spaces"
         self.project.mkdir()
         for name in ("voice_rpg", "skills"):
