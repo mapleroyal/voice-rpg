@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+"""Run the CLI from this checkout, using its installed environment when present."""
+import os
+from pathlib import Path
+import sys
+
+project = Path(__file__).resolve().parent
+python = project / ".venv" / "bin" / "python"
+if python.exists() and Path(sys.prefix).resolve() != python.parent.parent.resolve():
+    os.execv(str(python), [str(python), str(project / "rpg")] + sys.argv[1:])
+sys.path.insert(0, str(project))
+from voice_rpg.cli import main
+
+raise SystemExit(main())

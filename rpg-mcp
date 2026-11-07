@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""Launch the authoritative checkout's pinned stdio server from any directory."""
+import os
+from pathlib import Path
+import sys
+
+project = Path(__file__).resolve().parent
+python = project / ".venv" / "bin" / "python"
+if not python.is_file():
+    print("Voice RPG runtime is missing; run this checkout's install.py --runtime-only.", file=sys.stderr)
+    raise SystemExit(1)
+os.chdir(str(project))
+os.execv(str(python), [str(python), "-m", "voice_rpg.mcp"] + sys.argv[1:])
