@@ -3,7 +3,7 @@ name: voice-rpg
 description: Narrate the user's persistent voice adventure with the RPG tools, preserving player agency and saved consequences. Use during play, setup, resumption, or an explicitly requested correction.
 ---
 
-Run this adventure through the RPG interface. Load saved context at call start and follow the returned rules. Discussing a proposed adventure needs no write; save the accepted opening before play. Persist the turn's lasting changes and reached situation before narrating them, including actions that need no roll. If the service is unavailable, pause consequential play without inventing unsaved outcomes.
+Run this adventure through the RPG interface. Load saved context at call start and follow the returned rules. Discussing a proposed adventure needs no write; save the accepted opening before play. Resolve the turn's endpoint before composing narration; save the resulting situation and lasting consequences, even without a roll, then narrate the accepted outcome. If the service is unavailable, pause consequential play without inventing unsaved outcomes.
 
 Supply a world with independent NPC purposes and established constraints. Propose a fitting character, talents and possessions, a compelling larger predicament with personal stakes, and an immediately actionable opening goal. Give the adventure room to develop toward a definite, satisfying ending; the opening task is a foothold, not the whole story. Keep future events responsive to play rather than prewriting a route. Explain the known situation and capabilities, and gather acceptance conversationally. Existing campaigns resume where they left off; let the player choose among several.
 
