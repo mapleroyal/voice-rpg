@@ -12,6 +12,8 @@ from .engine import Engine
 from .guide import PROJECT, GUIDE_PATH, load_guide
 from .rules import RULES
 
+UTILITY_COMMANDS = ("schema", "guide", "doctor", "backup", "restore")
+
 
 def unique_object(pairs):
     result = {}
@@ -73,8 +75,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Voice RPG: maintenance and JSON access to the game engine.",
         epilog="Gameplay reads one JSON object from stdin or --input FILE. Stop all game writers before restore.")
-    parser.add_argument("command", nargs="?", choices=sorted(SCHEMAS) + ["schema", "guide", "doctor", "backup", "restore"])
-    parser.add_argument("subject", nargs="?", help="Command name for schema, or SQLite backup path for restore")
+    parser.add_argument("command", nargs="?", choices=sorted(SCHEMAS) + list(UTILITY_COMMANDS))
+    parser.add_argument("subject", nargs="?", help="Gameplay command name for schema, or SQLite backup path for restore")
     parser.add_argument("--input", metavar="FILE", help="Read one JSON request from a file")
     parser.add_argument("--data-dir", type=Path, default=PROJECT / "runs", help="Collection directory (default: project/runs)")
     parser.add_argument("--pretty", action="store_true", help="Indent JSON output")
@@ -98,7 +100,9 @@ def main(argv=None):
         if args.command == "schema":
             if args.subject:
                 if args.subject not in SCHEMAS:
-                    raise ValueError("Unknown command: " + args.subject)
+                    if args.subject in UTILITY_COMMANDS:
+                        raise ValueError(args.subject + " is a CLI utility without a JSON gameplay schema; run rpg " + args.subject + " directly.")
+                    raise ValueError("Unknown gameplay command: " + args.subject + "; run rpg schema to list valid commands.")
                 result = {"command": args.subject, "input_schema": SCHEMAS[args.subject]}
             else:
                 result = {"version": VERSION, "commands": {
