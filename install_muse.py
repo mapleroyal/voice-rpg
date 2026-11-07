@@ -72,13 +72,17 @@ raise SystemExit(main(["--data-dir", DATA_DIR, *sys.argv[1:]]))
     skill = f'''<!-- {MARKER} -->
 # Voice RPG
 
-CLI: `{command}` (invoke directly).
-
 ## Start
-Run `resume` for saved context and the canonical narrator guide.
+Invoke directly for saved context and the canonical narrator guide:
+
+```sh
+printf '{{}}' | {command} resume
+```
+
+For delegated play, pass the guide and saved context to the narrating agent at startup; return accepted outcomes or recovery information thereafter.
 
 ## API
-Run `schema` to discover commands; `schema COMMAND` gives the input contract when needed. Gameplay commands take one JSON object on stdin. Results are `{{"ok":true,"result":...}}`; failures are `{{"ok":false,"error":...}}` with a nonzero exit code.
+With the same executable, run `schema` to discover commands; `schema COMMAND` gives the input contract when needed. Gameplay commands take one JSON object on stdin. Results are `{{"ok":true,"result":...}}`; failures are `{{"ok":false,"error":...}}` with a nonzero exit code.
 '''
     metadata = "# " + MARKER + "\n" + "\n".join(
         key + ": " + json.dumps(value) for key, value in {

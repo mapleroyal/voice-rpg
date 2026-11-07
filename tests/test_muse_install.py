@@ -80,6 +80,30 @@ class MuseInstallTest(unittest.TestCase):
         self.assertFalse(response["ok"])
         self.assertFalse(self.data.exists())
 
+    def test_documented_startup_finishes_when_host_stdin_stays_open(self):
+        self.skills = self.root / "custom 'quoted' skills"
+        self.install()
+        process, made = self.create()
+        self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
+        self.assertTrue(made["ok"])
+        skill = (self.skills / installer.SKILL_NAME / "SKILL.md").read_text()
+        startup = skill.split("```sh\n", 1)[1].split("\n```", 1)[0]
+        with subprocess.Popen(startup, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, text=True, cwd=self.root) as process:
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+                self.fail("Documented startup waited for the host to close stdin")
+            self.assertFalse(process.stdin.closed)
+            stdout, stderr = process.communicate()
+        self.assertEqual(process.returncode, 0, stderr)
+        resumed = json.loads(stdout)
+        self.assertTrue(resumed["ok"])
+        self.assertEqual(resumed["result"]["campaign"]["id"], "test")
+        self.assertTrue(resumed["result"]["guide"].strip())
+
     def test_uses_current_python_without_checkout_virtualenv(self):
         self.install()
         # A broken optional MCP environment must not affect the stdlib Muse launcher.
