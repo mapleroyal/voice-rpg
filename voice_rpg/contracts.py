@@ -8,7 +8,7 @@ import re
 from .rules import RULES
 
 
-VERSION = "2.2.0"
+VERSION = "2.2.1"
 SAVE_VERSION = 2
 MAX_JSON_BYTES = 128 * 1024 * 1024
 MAX_JSON_DEPTH = 64
